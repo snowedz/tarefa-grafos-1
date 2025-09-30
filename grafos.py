@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import heapq
 
 # 1º questão
 
@@ -169,4 +170,5 @@ for r, c in caminho:
         grid_display[r][c] = '*'
 for linha in grid_display:
     print(' '.join(linha))
+
 
