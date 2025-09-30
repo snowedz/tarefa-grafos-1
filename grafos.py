@@ -48,15 +48,15 @@ print(df)
 
 # 2º Questão
 def bellman_ford(vertices, edges_df, source):
-    """
-    Implementação do Bellman-Ford usando numpy e pandas.
-    """
-    # --- Inicialização (pseudocódigo: d[v] ← ∞, π[v] ← NIL) ---
+
+   # Implementação do Bellman-Ford usando numpy e pandas.
+
+    # Inicialização (pseudocódigo: d[v] ← ∞, π[v] ← NIL)
     dist = np.full(vertices, np.inf)   # vetor de distâncias
     dist[source] = 0
     predecessor = np.full(vertices, -1)  # vetor de predecessores
 
-    # --- Relaxamento (pseudocódigo: para i de 1 até |V|-1) ---
+    # pseudocódigo: para i de 1 até |V|-1
     for _ in range(vertices - 1):
         for _, edge in edges_df.iterrows():
             u, v, w = edge["u"], edge["v"], edge["w"]
@@ -64,7 +64,7 @@ def bellman_ford(vertices, edges_df, source):
                 dist[v] = dist[u] + w
                 predecessor[v] = u
 
-    # --- Verificação de ciclos negativos ---
+    # Verificação de ciclos negativos
     for _, edge in edges_df.iterrows():
         u, v, w = edge["u"], edge["v"], edge["w"]
         if dist[u] + w < dist[v]:
@@ -74,9 +74,6 @@ def bellman_ford(vertices, edges_df, source):
 
 
 def get_path(predecessor, target):
-    """
-    Reconstrói o caminho mínimo a partir do vetor predecessor (π[v]).
-    """
     path = []
     while target != -1:
         path.insert(0, target)
@@ -108,5 +105,6 @@ path = get_path(pred, target)
 print("\nResultado:")
 print("Caminho mínimo:", path)
 print("Custo total:", dist[target], "Wh")
+
 
 
