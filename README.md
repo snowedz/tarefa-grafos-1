@@ -20,6 +20,21 @@ for k in range(num_vertices):
 
 
 ## 2º Questão
+O algoritmo escolhido foi o Bellman-Ford, pois lida com arestas de peso negativo, ao contrário do Dijkstra, e é mais eficiente que o Floyd-Warshall já que o problema pede apenas caminhos a partir de um vértice de origem.
+
+dist = np.full(vertices, np.inf)   # vetor de distâncias
+    dist[source] = 0
+    predecessor = np.full(vertices, -1)  # vetor de predecessores
+    for _ in range(vertices - 1):
+        for _, edge in edges_df.iterrows():
+            u, v, w = edge["u"], edge["v"], edge["w"]
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                predecessor[v] = u
+    for _, edge in edges_df.iterrows():
+        u, v, w = edge["u"], edge["v"], edge["w"]
+        if dist[u] + w < dist[v]:
+            raise ValueError("Grafo contém ciclo negativo!")
 
 
 ## 3º Questão
