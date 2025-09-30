@@ -45,3 +45,68 @@ print(f"Vértice mais distante da estação central: {vertice_distante} com dist
 print("Matriz de distâncias mínimas entre todos os pares de vértices:")
 df = pd.DataFrame(dist_matriz)
 print(df)
+
+# 2º Questão
+def bellman_ford(vertices, edges_df, source):
+    """
+    Implementação do Bellman-Ford usando numpy e pandas.
+    """
+    # --- Inicialização (pseudocódigo: d[v] ← ∞, π[v] ← NIL) ---
+    dist = np.full(vertices, np.inf)   # vetor de distâncias
+    dist[source] = 0
+    predecessor = np.full(vertices, -1)  # vetor de predecessores
+
+    # --- Relaxamento (pseudocódigo: para i de 1 até |V|-1) ---
+    for _ in range(vertices - 1):
+        for _, edge in edges_df.iterrows():
+            u, v, w = edge["u"], edge["v"], edge["w"]
+            if dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                predecessor[v] = u
+
+    # --- Verificação de ciclos negativos ---
+    for _, edge in edges_df.iterrows():
+        u, v, w = edge["u"], edge["v"], edge["w"]
+        if dist[u] + w < dist[v]:
+            raise ValueError("Grafo contém ciclo negativo!")
+
+    return dist, predecessor
+
+
+def get_path(predecessor, target):
+    """
+    Reconstrói o caminho mínimo a partir do vetor predecessor (π[v]).
+    """
+    path = []
+    while target != -1:
+        path.insert(0, target)
+        target = int(predecessor[target])
+    return path
+
+file_path = os.path.join(os.getcwd(), "graph2.txt")
+
+# Primeira linha: número de vértices e arestas
+with open(file_path, "r") as f:
+    header = f.readline().strip()
+    V, E = map(int, header.split())
+
+# Demais linhas: arestas
+edges_df = pd.read_csv(
+    file_path, 
+    sep="\t", 
+    skiprows=1, 
+    names=["u", "v", "w"]
+)
+
+print("Grafo carregado:")
+print(edges_df)
+
+source, target = 0, 6
+dist, pred = bellman_ford(V, edges_df, source)
+path = get_path(pred, target)
+
+print("\nResultado:")
+print("Caminho mínimo:", path)
+print("Custo total:", dist[target], "Wh")
+
+
