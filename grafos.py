@@ -107,4 +107,66 @@ print("Caminho mínimo:", path)
 print("Custo total:", dist[target], "Wh")
 
 
+# 3º questão
+with open(os.path.join(os.path.dirname(__file__), 'grid_example.txt'), 'r') as f:
+    lines = f.readlines()
+linhas = [line.strip() for line in lines]
+num_linhas, num_cols = map(int, linhas[0].strip().split())
+grid = [list(linha.strip()) for linha in linhas[1:num_linhas + 1]]
+
+comeco = None
+objetivo = None
+
+for r in range(num_linhas):
+    for c in range(num_cols):
+        if grid[r][c] == 'S':
+            comeco = (r, c)
+        elif grid[r][c] == 'G':
+            objetivo = (r, c)
+custos = {'=': 1, '.': 1, '#': np.inf, '~': 3, 'S': 1, 'G': 1}
+grid_custo = np.array([[custos[valor] for valor in linha] for linha in grid])
+direcao = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # N, S, O, L
+
+def dijkstra(grid, comeco, objetivo):
+    linhas, colunas = grid.shape
+    dist = np.full((linhas, colunas), np.inf)
+    dist[comeco] = 0
+    prev = {comeco: None}
+    pq = [(0, comeco)]  # (custo, (linha, coluna))
+    
+    while pq:
+        dist_atual, (r, c) = heapq.heappop(pq)
+        if (r, c) == objetivo:
+            break
+        if dist_atual > dist[r, c]:
+            continue
+        for dr, dc in direcao:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < linhas and 0 <= nc < colunas:
+                alt = dist_atual + grid[nr, nc]
+                if alt < dist[nr, nc]:
+                    dist[nr, nc] = alt
+                    prev[(nr, nc)] = (r, c)
+                    heapq.heappush(pq, (alt, (nr, nc)))
+
+    caminho = []
+    u = objetivo
+    if u in prev or u == comeco:
+        while u is not None:
+            caminho.append(u)
+            u = prev[u]
+        caminho.reverse()
+    return caminho, dist[objetivo]
+caminho, custo_total = dijkstra(grid_custo, comeco, objetivo)
+print("\n3º questão:")
+print(f"Caminho do robô do ponto S ao ponto G: {caminho}")
+print(f"Custo total do caminho: {custo_total}")
+
+
+grid_display = np.array(grid)
+for r, c in caminho:
+    if grid_display[r][c] not in ('S', 'G'):
+        grid_display[r][c] = '*'
+for linha in grid_display:
+    print(' '.join(linha))
 
