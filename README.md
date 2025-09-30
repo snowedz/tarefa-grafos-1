@@ -7,7 +7,8 @@ Linguagem: Python
 Bibliotecas utilizadas: OS, Numpy, Pandas e Heapq
 
 
-Na primeira questão foi escolhido o algorítimo de Floyd-Warshall pois a questão necessita saber o cálculo do caminho minimo entre todos os pares de vertices
+## 1º Questão
+Foi escolhido o algorítimo de Floyd-Warshall pois a questão necessita saber o cálculo do caminho minimo entre todos os pares de vertices
 e este algorítimo consegue fazer isso da forma mais eficiente.
 
 se D[i,j] > D[i,k] + D[k,j] então a menor distância entre i e j é passando por k
@@ -18,10 +19,11 @@ for k in range(num_vertices):
                 dist_matriz[i][j] = dist_matriz[i][k] + dist_matriz[k][j] # Atualiza a distância
 
 
-Na segunda questão ...
+## 2º Questão
 
 
-Na terceira questão foi escolhido o algorítimo de Dijkstra pois é necessário calcular o menor caminho entre uma origem e um destino.
+## 3º Questão
+Foi escolhido o algorítimo de Dijkstra pois é necessário calcular o menor caminho entre uma origem e um destino.
     while pq: 
         dist_atual, (r, c) = heapq.heappop(pq)
         if (r, c) == objetivo: -> Ao chegar no destino, o loop para
